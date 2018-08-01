@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Economia</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="bootstrap.min.css">
+        <script src="jquery.min.js"></script>
+        <script src="popper.min.js"></script>
+        <script src="bootstrap.min.js"></script>
+        <!-- <script src="ckeditor.js"></script> -->
+        <script src="ckeditor.js"></script>
+        <!-- <script src="https://cdnjs.com/libraries/Chart.js"></script> -->
+        <script src="Chart.bundle.min.js"></script>
+        <script src="Chart.min.js"></script>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css">
+        <script src="variabili.js"></script>
+        <script src="funzioni.js"></script>
+    </head>
+    <body>
+
+        <!--
+        <div class="container">
+            <h2>Form Dove inseriamo le cose inutili</h2>
+            <form action="/action_page.php">
+
+                <div class="form-group">
+                    <label for="attributo1">Password:</label>
+                    <input type="text" class="form-control" id="attributo1" placeholder="useless value" name="attributo1">
+                </div>
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" name="checkbox"> checkbox
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label for="comment">Comment:</label>
+                    <textarea class="form-control" rows="5" id="comment"></textarea>
+                </div> 
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div> -->
+
+        <div class="container"> <div class="jumbotron">
+                <h1>Valutazione di computer portatili</h1>
+                <p>Progetto per il corso di Economia ed Organizzazione Aziendale, AA 2017/2018, a cura del Professore <strong>Emilio Esposito</strong>.</p>
+                <p>Sviluppatori: <strong>Simone Mosi</strong> (N97/242), <strong>Stefano Perrini</strong> (N86/1358)
+            </div>
+        </div>
+        <div class="row">
+            <div class='mx-auto'>
+                Seleziona l'interfaccia desiderata
+            </div>
+        </div>
+        <div class="row">
+            <div class="btn-group btn-group-toggle mx-auto" id="swap" data-toggle="buttons">
+                <label class="btn btn-success active" onclick="showPage('utente');" data-toggle="popover" data-trigger="hover" data-content="Il cliente è interessato all'acquisto di un computer, ed il suo compito sarà solo quello di specificare quali sono gli aspetti che più gli interessano."  data-placement="bottom" >
+                    <input type="radio" name="options" id="option1" autocomplete="off" checked> Cliente
+                </label>
+                <label class="btn btn-warning" onclick="showPage('progettista');" data-toggle="popover" data-trigger="hover" data-content="Il progettista ha il compito di valutare i computer in vendita."  data-placement="bottom">
+                    <input type="radio" name="options" id="option2" autocomplete="off"> Progettista
+                </label>
+                <label class="btn btn-primary" onclick="showPage('marketing');" data-toggle="popover" data-trigger="hover" data-content="Il reparto marketing ha il compito di ottenere informazioni sulle modifiche da effettuare ad un determinato computer per soddisfare le esigenze di un settore di mercato."  data-placement="bottom">
+                    <input type="radio" name="options" id="option3" autocomplete="off"> Marketing
+                </label>
+            </div>
+        </div>
+        <div id="utente" style="display: none;">
+            <div class="container">
+                <h1>Utente</h1>
+                <p>Quali sono le caratteristiche più importanti (in ordine) che cerchi in un computer? 
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#legenda">
+                        <i class="fas fa-info-circle"></i>
+                    </button>
+                </p>
+                <div class="btn-group btn-group-lg">
+                    <button onclick="setSegmentoSelected(1);" type="button" id="ptcomfort" class="btn btn-warning">Prestazioni e Comfort</button>
+                    <button onclick="setSegmentoSelected(2);" type="button" id="ptprezzzo" class="btn btn-primary">Prestazioni e Prezzo</button>
+                    <button onclick="setSegmentoSelected(3);" type="button" id="ptpeso" class="btn btn-info">Prestazioni e Peso</button>
+                    <button onclick="setSegmentoSelected(4);" type="button" id="ptestetica" class="btn btn-danger">Prestazioni e Estetica</button>
+                    <button onclick="setSegmentoSelected(5);" type="button" id="prezzoprestazioni" class="btn btn-dark">Prezzo e Prestazioni</button>
+                </div>
+            </div>
+            <br/>
+            <div class="container" id='winner'>
+                <div class="row"><div class="mx-auto">Modello consigliato:</div></div>
+                <br/>
+                <div class="row">
+                    <div class="mx-auto">
+                        <img id="winner-img" height="200" width="300" src="https://www.notebookcheck.net/uploads/tx_nbc2/AsusStrixGL503VM-Hero__1_.JPG"/>
+                    </div>
+                    <div class="mx-auto">
+                        <h4 id='winner-name'>Prova</h4>
+                        <ul>
+                            <li>Processore: <span id="winner-cpu"></span></li>
+                            <li>Scheda Video: <span id="winner-gpu"></span></li>
+                            <li>Memoria: <span id="winner-ram"></span></li>
+                            <li>Autonomia: <span id="winner-autonomia"></span></li>
+                            <li>Prezzo: <span id="winner-prezzo"></span></li>
+                        </ul>
+                    </div>
+                    <div class="mx-auto">
+                        <div id="canvas_holder_grafico_barre_componenti" class="mx-auto"><!-- GRAFICO -->
+                            <canvas id="grafico_barre_componenti"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <p class="mx-auto">Punteggio degli altri modelli simili al computer proposto:</p>
+                </div>
+                <div class="row">
+                    <div id="canvas_holder_grafico_torta_pc" class="mx-auto" style="width:50%"><!-- GRAFICO -->
+                        <canvas id="grafico_torta_pc"></canvas>
+                    </div>
+                    <div id="canvas_holder_grafico_barre_pc" class="mx-auto" style="width:50%"><!-- GRAFICO -->
+                        <canvas id="grafico_barre_pc"></canvas>
+                    </div>
+                </div>
+            </div> <!-- container canvas pie -->
+
+        </div>
+
+
+        <div id="progettista" style="display: none;">
+            <h1>Progettista</h1>
+
+
+
+            <!-- ROG -->
+            <div id="rog">
+                <div class="container-fluid">
+                    <h3>Asus ROG 15GL503VL</h3>
+                    <br/>
+                    <div class="row" style="overflow-x: auto">
+                        <div class="mx-auto">
+                            <img height="200" width="300" src="https://www.notebookcheck.net/uploads/tx_nbc2/AsusStrixGL503VM-Hero__1_.JPG"/>
+                        </div>
+                        <div class="mx-auto">
+
+                            <table class='prestazioni table table-striped table-bordered table-hover'>
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th class="">ROG - Prestazioni</th>
+                                        <th class="">Giudizio</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="">
+                                    <tr>
+                                        <td>CPU</td>
+                                        <td><script>printSelectFuzzy(9, "cpu");</script></td>
+                                    </tr>
+                                    <tr>
+                                        <td>GPU</td>
+                                        <td><script>printSelectFuzzy(9, "gpu");</script></td>
+                                    </tr>
+                                    <tr>
+                                        <td>RAM</td>
+                                        <td><script>printSelectFuzzy(9, "ram");</script></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="mx-auto">    
+                            <table class='comfort table table-striped table-bordered table-hover'>
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th class="">ROG - Comfort</th>
+                                        <th class="">Giudizio</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Rumore</td>
+                                        <td><script>printSelectFuzzy(3, "rumore");</script></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Autonomia</td>
+                                        <td><script>printSelectFuzzy(1, "autonomia");</script></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Schermo</td>
+                                        <td><script>printSelectFuzzy(7, "schermo");</script></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="mx-auto">    
+                            <table class='generale table table-striped table-bordered table-hover'>
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th class="">ROG - Generale</th>
+                                        <th class="">Giudizio</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Peso</td>
+                                        <td><script>printSelectFuzzy(5, "peso");</script></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Prezzo</td>
+                                        <td><script>printSelectFuzzy(3, "prezzo");</script></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Prestazioni</td>
+                                        <td data-toggle="popover" data-trigger="hover" data-content="Questo valore è calcolato in base ai giudizi degli elementi della sua sottocategoria (Prestazioni)"  data-placement="bottom">[Valore Autocalcolato]</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Estetica</td>
+                                        <td><script>printSelectFuzzy(3, "estetica");</script></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Comfort</td>
+                                        <td  data-toggle="popover" data-trigger="hover" data-content="Questo valore è calcolato in base ai giudizi degli elementi della sua sottocategoria (Comfort)"  data-placement="bottom">[Valore Autocalcolato]</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>   
+                    </div> <!-- close row -->
+                </div> <!-- close container -->
+            </div> <!-- close rog -->
+
+
+
+
+
+            <!-- Surface -->
+            <div id="surface">
+                <div class="container-fluid">
+                    <h3>Surface Laptop 15</h3>
+                    <br/>
+                    <div class="row" style="overflow-x: auto">
+                        <div class="mx-auto">
+                            <img height="300" width="400" src="https://www.macitynet.it/wp-content/uploads/2017/10/surface-book-2-icon-740.jpg"/>
+                        </div>
+                        <div class="mx-auto">
+
+                            <table class='prestazioni table table-striped table-bordered table-hover'>
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th class="">Surface - Prestazioni</th>
+                                        <th class="">Giudizio</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="">
+                                    <tr>
+                                        <td>CPU</td>
+                                        <td><script>printSelectFuzzy(7, "cpu");</script></td>
+                                    </tr>
+                                    <tr>
+                                        <td>GPU</td>
+                                        <td><script>printSelectFuzzy(5, "gpu");</script></td>
+                                    </tr>
+                                    <tr>
+                                        <td>RAM</td>
+                                        <td><script>printSelectFuzzy(7, "ram");</script></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="mx-auto">    
+                            <table class='comfort table table-striped table-bordered table-hover'>
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th class="">Surface - Comfort</th>
+                                        <th class="">Giudizio</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Rumore</td>
+                                        <td><script>printSelectFuzzy(9, "rumore");</script></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Autonomia</td>
+                                        <td><script>printSelectFuzzy(9, "autonomia");</script></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Schermo</td>
+                                        <td><script>printSelectFuzzy(9, "schermo");</script></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="mx-auto">    
+                            <table class='generale table table-striped table-bordered table-hover'>
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th class="">Surface - Generale</th>
+                                        <th class="">Giudizio</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Peso</td>
+                                        <td><script>printSelectFuzzy(9, "peso");</script></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Prezzo</td>
+                                        <td><script>printSelectFuzzy(3, "prezzo");</script></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Prestazioni</td>
+                                        <td data-toggle="popover" data-trigger="hover" data-content="Questo valore è calcolato in base ai giudizi degli elementi della sua sottocategoria (Prestazioni)"  data-placement="bottom">[Valore Autocalcolato]</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Estetica</td>
+                                        <td><script>printSelectFuzzy(7, "estetica");</script></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Comfort</td>
+                                        <td data-toggle="popover" data-trigger="hover" data-content="Questo valore è calcolato in base ai giudizi degli elementi della sua sottocategoria (Comfort)"  data-placement="bottom">[Valore Autocalcolato]</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>   
+                    </div> <!-- close row -->
+                </div> <!-- close container -->
+            </div> <!-- close Surface -->
+
+
+
+
+            <!-- zen -->
+            <div id="zen">
+                <div class="container-fluid">
+                    <h3>Asus Zen UX 390 A</h3>
+                    <br/>
+                    <div class="row" style="overflow-x: auto">
+                        <div class="mx-auto">
+                            <img height="300" width="400" src="https://assets.hardwarezone.com/img/2016/08/ASUS_ZenBook_3_UX390UA.jpg"/>
+                        </div>
+                        <div class="mx-auto">
+
+                            <table class='prestazioni table table-striped table-bordered table-hover'>
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th class="">Zen - Prestazioni</th>
+                                        <th class="">Giudizio</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="">
+                                    <tr>
+                                        <td>CPU</td>
+                                        <td><script>printSelectFuzzy(7, "cpu");</script></td>
+                                    </tr>
+                                    <tr>
+                                        <td>GPU</td>
+                                        <td><script>printSelectFuzzy(5, "gpu");</script></td>
+                                    </tr>
+                                    <tr>
+                                        <td>RAM</td>
+                                        <td><script>printSelectFuzzy(9, "ram");</script></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="mx-auto">    
+                            <table class='comfort table table-striped table-bordered table-hover'>
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th class="">Zen - Comfort</th>
+                                        <th class="">Giudizio</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Rumore</td>
+                                        <td><script>printSelectFuzzy(7, "rumore");</script></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Autonomia</td>
+                                        <td><script>printSelectFuzzy(7, "autonomia");</script></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Schermo</td>
+                                        <td><script>printSelectFuzzy(7, "schermo");</script></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="mx-auto">    
+                            <table class='generale table table-striped table-bordered table-hover'>
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th class="">Zen - Generale</th>
+                                        <th class="">Giudizio</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Peso</td>
+                                        <td><script>printSelectFuzzy(9, "peso");</script></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Prezzo</td>
+                                        <td><script>printSelectFuzzy(5, "prezzo");</script></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Prestazioni</td>
+                                        <td data-toggle="popover" data-trigger="hover" data-content="Questo valore è calcolato in base ai giudizi degli elementi della sua sottocategoria (Prestazioni)"  data-placement="bottom">[Valore Autocalcolato]</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Estetica</td>
+                                        <td><script>printSelectFuzzy(7, "estetica");</script></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Comfort</td>
+                                        <td data-toggle="popover" data-trigger="hover" data-content="Questo valore è calcolato in base ai giudizi degli elementi della sua sottocategoria (Comfort)"  data-placement="bottom">[Valore Autocalcolato]</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>   
+                    </div> <!-- close row -->
+                </div> <!-- close container -->
+            </div> <!-- close zen -->
+
+
+            <!-- xps -->
+            <div id="xps">
+                <div class="container-fluid">
+                    <h3>XPS 15 9560</h3>
+                    <br/>
+                    <div class="row" style="overflow-x: auto">
+                        <div class="mx-auto">
+                            <img height="300" width="400" src="http://cdn.benchmark.pl/uploads/products/3972/dell-xps-15_1.jpg"/>
+                        </div>
+                        <div class="mx-auto">
+
+                            <table class='prestazioni table table-striped table-bordered table-hover'>
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th class="">XPS - Prestazioni</th>
+                                        <th class="">Giudizio</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="">
+                                    <tr>
+                                        <td>CPU</td>
+                                        <td><script>printSelectFuzzy(9, "cpu");</script></td>
+                                    </tr>
+                                    <tr>
+                                        <td>GPU</td>
+                                        <td><script>printSelectFuzzy(7, "gpu");</script></td>
+                                    </tr>
+                                    <tr>
+                                        <td>RAM</td>
+                                        <td><script>printSelectFuzzy(9, "ram");</script></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="mx-auto">    
+                            <table class='comfort table table-striped table-bordered table-hover'>
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th class="">XPS - Comfort</th>
+                                        <th class="">Giudizio</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Rumore</td>
+                                        <td><script>printSelectFuzzy(7, "rumore");</script></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Autonomia</td>
+                                        <td><script>printSelectFuzzy(5, "autonomia");</script></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Schermo</td>
+                                        <td><script>printSelectFuzzy(7, "schermo");</script></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="mx-auto">    
+                            <table class='generale table table-striped table-bordered table-hover'>
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th class="">XPS - Generale</th>
+                                        <th class="">Giudizio</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Peso</td>
+                                        <td><script>printSelectFuzzy(5, "peso");</script></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Prezzo</td>
+                                        <td><script>printSelectFuzzy(3, "prezzo");</script></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Prestazioni</td>
+                                        <td data-toggle="popover" data-trigger="hover" data-content="Questo valore è calcolato in base ai giudizi degli elementi della sua sottocategoria (Prestazioni)"  data-placement="bottom">[Valore Autocalcolato]</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Estetica</td>
+                                        <td><script>printSelectFuzzy(5, "estetica");</script></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Comfort</td>
+                                        <td data-toggle="popover" data-trigger="hover" data-content="Questo valore è calcolato in base ai giudizi degli elementi della sua sottocategoria (Comfort)"  data-placement="bottom">[Valore Autocalcolato]</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>   
+                    </div> <!-- close row -->
+                </div> <!-- close container -->
+            </div> <!-- close xps -->
+
+
+            <!-- macbook pro -->
+            <div id="macbook">
+                <div class="container-fluid">
+                    <h3>MacBook Pro 15</h3>
+                    <br/>
+                    <div class="row" style="overflow-x: auto">
+                        <div class="mx-auto">
+                            <img height="300" width="400" src="https://i5.walmartimages.com/asr/08f5c0a5-d45c-4b00-969e-75158b225af0_1.41822ef269d39eab6ab76c12a5d166cd.jpeg"/>
+                        </div>
+                        <div class="mx-auto">
+
+                            <table class='prestazioni table table-striped table-bordered table-hover'>
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th class="">MacBook - Prestazioni</th>
+                                        <th class="">Giudizio</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="">
+                                    <tr>
+                                        <td>CPU</td>
+                                        <td><script>printSelectFuzzy(7, "cpu");</script></td>
+                                    </tr>
+                                    <tr>
+                                        <td>GPU</td>
+                                        <td><script>printSelectFuzzy(5, "gpu");</script></td>
+                                    </tr>
+                                    <tr>
+                                        <td>RAM</td>
+                                        <td><script>printSelectFuzzy(7, "ram");</script></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="mx-auto">    
+                            <table class='comfort table table-striped table-bordered table-hover'>
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th class="">MacBook - Comfort</th>
+                                        <th class="">Giudizio</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Rumore</td>
+                                        <td><script>printSelectFuzzy(9, "rumore");</script></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Autonomia</td>
+                                        <td><script>printSelectFuzzy(9, "autonomia");</script></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Schermo</td>
+                                        <td><script>printSelectFuzzy(9, "schermo");</script></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="mx-auto">    
+                            <table class='generale table table-striped table-bordered table-hover'>
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th class="">MacBook - Generale</th>
+                                        <th class="">Giudizio</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Peso</td>
+                                        <td><script>printSelectFuzzy(3, "peso");</script></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Prezzo</td>
+                                        <td><script>printSelectFuzzy(1, "prezzo");</script></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Prestazioni</td>
+                                        <td data-toggle="popover" data-trigger="hover" data-content="Questo valore è calcolato in base ai giudizi degli elementi della sua sottocategoria (Prestazioni)"  data-placement="bottom">[Valore Autocalcolato]</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Estetica</td>
+                                        <td><script>printSelectFuzzy(9, "estetica");</script></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Comfort</td>
+                                        <td data-toggle="popover" data-trigger="hover" data-content="Questo valore è calcolato in base ai giudizi degli elementi della sua sottocategoria (Comfort)"  data-placement="bottom">[Valore Autocalcolato]</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>   
+                    </div> <!-- close row -->
+                </div> <!-- close container -->
+            </div> <!-- close MacBook -->
+
+			<!-- hp -->
+			<div id="hp">
+				<div class="container-fluid">
+					<h3>HP 15-AY144NL</h3>
+					<br/>
+					<div class="row" style="overflow-x: auto">
+						<div class="mx-auto">
+							<img height="300" width="400" src="https://images-na.ssl-images-amazon.com/images/I/817i4157AdL._SX466_.jpg"/>
+						</div>
+						<div class="mx-auto">
+
+							<table class='prestazioni table table-striped table-bordered table-hover'>
+								<thead class="thead-dark">
+									<tr>
+										<th class="">HP - Prestazioni</th>
+										<th class="">Giudizio</th>
+									</tr>
+								</thead>
+								<tbody class="">
+									<tr>
+										<td>CPU</td>
+										<td><script>printSelectFuzzy(7, "cpu");</script></td>
+									</tr>
+									<tr>
+										<td>GPU</td>
+										<td><script>printSelectFuzzy(7, "gpu");</script></td>
+									</tr>
+									<tr>
+										<td>RAM</td>
+										<td><script>printSelectFuzzy(5, "ram");</script></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+
+						<div class="mx-auto">    
+							<table class='comfort table table-striped table-bordered table-hover'>
+								<thead class="thead-dark">
+									<tr>
+										<th class="">HP - Comfort</th>
+										<th class="">Giudizio</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Rumore</td>
+										<td><script>printSelectFuzzy(3, "rumore");</script></td>
+									</tr>
+									<tr>
+										<td>Autonomia</td>
+										<td><script>printSelectFuzzy(5, "autonomia");</script></td>
+									</tr>
+									<tr>
+										<td>Schermo</td>
+										<td><script>printSelectFuzzy(3, "schermo");</script></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="mx-auto">    
+							<table class='generale table table-striped table-bordered table-hover'>
+								<thead class="thead-dark">
+									<tr>
+										<th class="">HP - Generale</th>
+										<th class="">Giudizio</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Peso</td>
+										<td><script>printSelectFuzzy(5, "peso");</script></td>
+									</tr>
+									<tr>
+										<td>Prezzo</td>
+										<td><script>printSelectFuzzy(9, "prezzo");</script></td>
+									</tr>
+									<tr>
+										<td>Prestazioni</td>
+										<td data-toggle="popover" data-trigger="hover" data-content="Questo valore è calcolato in base ai giudizi degli elementi della sua sottocategoria (Prestazioni)"  data-placement="bottom">[Valore Autocalcolato]</td>
+									</tr>
+									<tr>
+										<td>Estetica</td>
+										<td><script>printSelectFuzzy(3, "estetica");</script></td>
+									</tr>
+									<tr>
+										<td>Comfort</td>
+										<td data-toggle="popover" data-trigger="hover" data-content="Questo valore è calcolato in base ai giudizi degli elementi della sua sottocategoria (Comfort)"  data-placement="bottom">[Valore Autocalcolato]</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>   
+					</div> <!-- close row -->
+				</div> <!-- close container -->
+			</div> <!-- close hp -->
+
+
+
+        </div> <!-- close progettista -->
+
+        <div id="marketing" style="display: none;">
+			<div class="container">
+				<h1>Marketing</h1>
+				<p>In questa schermata è possibile analizzare i vari settori di mercato.</p>
+				<div class="row">
+					<div id="canvas_holder_torta_segmenti" class="mx-auto" style="width:60%"><!-- GRAFICO -->
+						<canvas id="grafico_torta_segmenti"></canvas>
+					</div>
+				</div>
+				<br/>
+				<p>È possibile inserire in quest'analisi anche il modello di computer scelto in modo da stabilire come regolare le sue caratteristiche in modo da rientrare in un determinato segmento di mercato.</p>
+				<p>Seleziona il modello da analizzare, poi clicca sui vari segmenti di mercato nella legenda del grafico per effettuare un confronto solo con i settori di interesse:</p>
+				<select id='pc_analysis' class='form-control w-25' onchange="somethingChanged();">
+					<option value='rog'>Asus ROG 15GL503VL</option>
+					<option value='surface'>Surface Laptop 15</option>
+					<option value='zen'>Asus Zen UX 390 A</option>
+					<option value='xps'>XPS 15 9560</option>
+					<option value='macbook'>MacBook Pro 15</option>
+					<option value='hp'>HP 15 AY139NL</option>
+				</select>
+				<br/>
+				<div class="row">
+					<div id="canvas_holder_radar_segmenti" class="mx-auto" style="width:70%"><!-- GRAFICO -->
+						<canvas id="grafico_radar_segmenti"></canvas>
+					</div>
+				</div>
+			</div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="legenda" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Informazioni</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Ecco una spiegazione delle caratteristiche:</p>
+                        <p><i class="fas fa-space-shuttle"></i> - <strong>Prestazioni:</strong> Il termine "prestazioni" rappresenta la "potenza" del computer.
+                            Un computer utilizzato per lavoro o comunque in un ambito in cui la grafica è importante richiede un alto livello di prestazioni.
+                            Un computer utilizzato nella vita quotidiana, per navigare su internet o per prendere appunti invece non richiede un alto livello di prestazioni.
+                        </p>
+                        <p><i class="fas fa-balance-scale"></i> - <strong>Peso:</strong> Proprio per la sua natura, un computer portatile può essere trasportato: in questo caso è consigliato tenere in considerazione l'aspetto del peso.
+                            Se invece difficilmente il pc verrà portato fuori dall'ufficio o dalla casa, questo aspetto può essere trascurato.
+                        </p>
+                        <p><i class="fas fa-couch"></i> - <strong>Comfort:</strong> Il comfort indica la comodità di utilizzo del prodotto. E' un parametro che considera la durata della batteria, la grandezza dello schermo e la quantità di rumore prodotto dal pc.
+                            Se il computer viene utilizzato molte ore al giorno (ad esempio nel caso del lavoro) si consiglia di prendere molto in considerazione questo aspetto.
+                        </p>
+                        <p><i class="fab fa-apple"></i> - <strong>Estetica:</strong> L'estetica rappresenta il livello di attenzioni posto per la parte esteriore del computer, considerando sia la qualità dei materiali sia vari ritocchi ed abbellimenti.
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Ok</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </body>
+</html>
