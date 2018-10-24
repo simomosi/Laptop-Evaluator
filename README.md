@@ -9,4 +9,4 @@ It provides 3 interfaces:
 * the **design** interface lets you evaluate laptops using [fuzzy logic](https://en.wikipedia.org/wiki/Fuzzy_logic); this evaluation is used to compute each laptop's final score;
 * the **marketing** interface lets you compare a single laptop to all the identified market segments' needs in order to know wich aspect to improve.
 
-I know, the source folder is a bit disordered: the files you may want to look at are *index.html*, *variabili.js* and *funzioni.js*.
+I know, the source folder is a bit messy: the files you may want to look at are *index.html*, *variabili.js* and *funzioni.js*.
