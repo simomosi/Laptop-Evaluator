@@ -1,7 +1,7 @@
 # Laptop-Evaluator
 Developed in 4 days for a university project, this system is a one page application designed to choose which laptop a client wants to buy and evaluates it.
 
-You can try it [**HERE**](http://economia2018.informatica-unina.com/) (no registration is required).
+You can try it [**HERE**](https://www.informatica-unina.com/economia/) (no registration is required).
 The software is written using *HTML5*, *Bootstrap* and *JQuery* (+ *Chart.js*).
 
 It provides 3 interfaces:
