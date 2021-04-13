@@ -9,6 +9,8 @@ It provides 3 interfaces:
 * the **design** interface lets you evaluate laptops using [fuzzy logic](https://en.wikipedia.org/wiki/Fuzzy_logic); this evaluation is used to compute each laptop's final score;
 * the **marketing** interface lets you compare a single laptop to all the identified market segments' needs in order to know wich aspect to improve.
 
+Developed with @snipershady
+
 ## Screenshots
 ### Client interface
 ![client](screenshots/economia-1.gif)
